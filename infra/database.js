@@ -7,10 +7,27 @@ async function query(queryObject) {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl:
-      process.env.NODE_ENV === "development"
-        ? false
-        : { rejectUnauthorized: false },
+    ssl: getSSLValues(),
+  });
+
+  console.log({
+    POSTGRES_HOST: [
+      process.env.POSTGRES_HOST,
+      typeof process.env.POSTGRES_HOST,
+    ],
+    POSTGRES_PORT: [
+      process.env.POSTGRES_PORT,
+      typeof process.env.POSTGRES_PORT,
+    ],
+    POSTGRES_USER: [
+      process.env.POSTGRES_USER,
+      typeof process.env.POSTGRES_USER,
+    ],
+    POSTGRES_DB: [process.env.POSTGRES_DB, typeof process.env.POSTGRES_DB],
+    POSTGRES_PASSWORD: [
+      process.env.POSTGRES_PASSWORD,
+      typeof process.env.POSTGRES_PASSWORD,
+    ],
   });
 
   try {
@@ -25,6 +42,16 @@ async function query(queryObject) {
   }
 }
 
+function getSSLValues() {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA,
+    };
+  }
+  console.log("NODE_ENV: " + process.env.NODE_ENV);
+  return process.env.NODE_ENV === "production" ? true : false;
+}
+
 export default {
-  query: query,
+  query,
 };
