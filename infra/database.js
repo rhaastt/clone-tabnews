@@ -34,11 +34,13 @@ export default {
 };
 
 function getSSLValues() {
-  if (process.env.POSTGRES_CA) {
-    return {
-      ca: process.env.POSTGRES_CA,
-    };
+  if (process.env.POSTGRES_SSL === "false") return false;
+
+  const isSupabase = process.env.POSTGRES_HOST?.includes("supabase.co");
+
+  if (process.env.POSTGRES_SSL === "true" || isSupabase) {
+    return { rejectUnauthorized: false };
   }
 
-  return process.env.NODE_ENV === "production" ? true : false;
+  return false;
 }
