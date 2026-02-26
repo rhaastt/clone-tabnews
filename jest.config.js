@@ -3,7 +3,11 @@ dotenv.config({
   path: ".env.development",
 });
 
-console.log(dotenv.config());
+console.log(
+  dotenv.config({
+    path: ".env.development",
+  }),
+);
 
 const nextJest = require("next/jest");
 
